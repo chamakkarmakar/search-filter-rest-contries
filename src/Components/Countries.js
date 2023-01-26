@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from 'react'
-import { Card } from 'react-bootstrap';
+import { Card, Container } from 'react-bootstrap';
 
 const Countries = () => {
-    const [countries,setCountries]=useState([]);
+    const [countries, setCountries] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         fetch("https://restcountries.com/v3.1/all")
-        .then(res=>res.json())
-        .then(data=>console.log(data))
-    },[])
-    
-  return (
-    <Card style={{ width: '18rem' }}>
-    <Card.Img variant="top" src="holder.js/100px180" />
-    <Card.Body>
-      <Card.Title>Card Title</Card.Title>
-      <Card.Text>
-        Some quick example text to build on the card title and make up the
-        bulk of the card's content.
-      </Card.Text>
-    </Card.Body>
-  </Card>
-  )
+            .then(res => res.json())
+            .then(
+                data => {
+                    setCountries(data)
+
+                }
+            )
+    }, [])
+    return (
+        <Container fluid>
+            <div className='row'>
+            {
+                countries.map(country =>
+                    <Card className='col-4 m-4 p-0' style={{ width: '18rem', height: '18rem' }}>
+                        <img src={country.flags.png} className="w-100 h-50" alt={country.name.common}/>
+                        <Card.Body>
+                            <Card.Title>{country.name.common}</Card.Title>
+                            <Card.Text>
+                                <p><b>Population:</b> {country.population} <br />
+                                <b>Region:</b> {country.region} <br />
+                                <b>Capital:</b> {country.capital}</p>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                )
+            }
+            </div>
+        </Container>
+    )
 }
 
 export default Countries
