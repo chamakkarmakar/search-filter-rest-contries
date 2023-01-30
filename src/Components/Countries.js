@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Container, Spinner,Button, Form  } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import Country from './Country';
 
 const Countries = () => {
     const [countries, setCountries] = useState([]);
     const [isLoad, setIsLoad] = useState(false);
     const [error, setError] = useState(null);
+    const [q, setQ] = useState("");
 
     useEffect(() => {
         fetch("https://restcountries.com/v3.1/all")
@@ -31,21 +34,23 @@ const Countries = () => {
     } else {
         return (
             <Container fluid>
-                
+                <Form className="my-5 d-flex justify-content-center">
+                    <Form.Control
+                        placeholder="Search by country name"
+                        className='w-25'
+                       
+                        onChange={e => setQ(e.target.value)}
+                    />
+                </Form>
                 <div className='row'>
                     {
-                        countries.map((country, index) =>
-                            <Card key={index} className='col-4 m-4 p-0' style={{ width: '18rem', height: '18rem' }}>
-                                <img src={country.flags.png} className="w-100 h-50" alt={country.name.common} />
-                                <Card.Body>
-                                    <Card.Title>{country.name.common}</Card.Title>
-                                    <Card.Text>
-                                        <p><b>Population:</b> {country.population} <br />
-                                            <b>Region:</b> {country.region} <br />
-                                            <b>Capital:</b> {country.capital}</p>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
+                        countries.filter(country => {
+                            return q.toLowerCase() === " " ? country : country.name.common.toLowerCase().includes(q)
+                        }).map((country, index) =>
+                            <Country 
+                            key={index}
+                            country={country}
+                            />
                         )
                     }
                 </div>
